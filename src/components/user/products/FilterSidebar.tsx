@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 
 function FilterSidebar() {
@@ -6,13 +7,16 @@ function FilterSidebar() {
     productType: [] as string[],
     size: [] as string[],
     color: [] as string[],
-    qualityName: [] as string[]
+    qualityName: [] as string[],
   });
+
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   const filterOptions = {
     productType: ["Option 1", "Option 2", "Option 3"],
     size: ["S", "M", "L", "XL"],
     color: ["Red", "Blue", "Green", "Black"],
-    qualityName: ["Premium", "Standard", "Economy"]
+    qualityName: ["Premium", "Standard", "Economy"],
   };
 
   const toggleFilter = (
@@ -22,153 +26,198 @@ function FilterSidebar() {
     setSelectedFilters((prev) => {
       const currentFilters = prev[category];
       if (currentFilters.includes(value)) {
-        return {
-          ...prev,
-          [category]: currentFilters.filter((item) => item !== value)
-        };
+        return { ...prev, [category]: currentFilters.filter((i) => i !== value) };
       } else {
-        return {
-          ...prev,
-          [category]: [...currentFilters, value]
-        };
+        return { ...prev, [category]: [...currentFilters, value] };
       }
     });
   };
 
   const clearFilter = (category?: keyof typeof selectedFilters) => {
     if (category) {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        [category]: []
-      }));
+      setSelectedFilters((prev) => ({ ...prev, [category]: [] }));
     } else {
       setSelectedFilters({
         productType: [],
         size: [],
         color: [],
-        qualityName: []
+        qualityName: [],
       });
     }
   };
+
+  const MobileFilterButton = () => (
+    <div className="lg:hidden mb-4">
+      <button
+        onClick={() => setIsMobileFilterOpen(true)}
+        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium"
+      >
+        Show Filters
+      </button>
+    </div>
+  );
+
   return (
-    <div className="lg:w-1/4">
-      <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4">
-        {/* Filter Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Filter by</h2>
-          <button
-            onClick={() => clearFilter()}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            Clear All
-          </button>
-        </div>
+    <>
+      {/* Mobile Filter Button */}
+      <MobileFilterButton />
 
-        {/* Product Type Filter */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium text-gray-900">Product Type</h3>
-            <button
-              onClick={() => clearFilter("productType")}
-              className="text-xs text-gray-500 hover:text-gray-700"
+      {/* Mobile Filter Overlay with AnimatePresence */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              className="fixed inset-0  bg-opacity-50 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+            />
+
+            {/* Sidebar */}
+            <motion.div
+              key="sidebar"
+              className="fixed top-0 left-0 h-full w-80 bg-white z-50 overflow-y-auto"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
             >
-              Clear
+              <div className="p-6 flex flex-col h-full">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6 pb-4 border-b">
+                  <h2 className="text-lg font-semibold">Filters</h2>
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Clear All */}
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-lg font-semibold">Filter by</h2>
+                  <button
+                    onClick={() => clearFilter()}
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                {/* Filters */}
+                {Object.keys(filterOptions).map((category) => (
+                  <div key={category} className="mb-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="font-medium text-gray-900">{category}</h3>
+                      <button
+                        onClick={() =>
+                          clearFilter(category as keyof typeof selectedFilters)
+                        }
+                        className="text-xs text-gray-500 hover:text-gray-700"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {filterOptions[category as keyof typeof filterOptions].map(
+                        (option) => (
+                          <label key={option} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedFilters[
+                                category as keyof typeof selectedFilters
+                              ].includes(option)}
+                              onChange={() =>
+                                toggleFilter(
+                                  category as keyof typeof selectedFilters,
+                                  option
+                                )
+                              }
+                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Apply Button */}
+                <div className="mt-auto">
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Filter Sidebar */}
+      <div className="hidden lg:block lg:w-1/4">
+        <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Filter by</h2>
+            <button
+              onClick={() => clearFilter()}
+              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Clear All
             </button>
           </div>
-          <div className="space-y-2">
-            {filterOptions.productType.map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.productType.includes(option)}
-                  onChange={() => toggleFilter("productType", option)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700">{option}</span>
-              </label>
-            ))}
-          </div>
-        </div>
 
-        {/* Size Filter */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium text-gray-900">Size</h3>
-            <button
-              onClick={() => clearFilter("size")}
-              className="text-xs text-gray-500 hover:text-gray-700"
-            >
-              Clear
-            </button>
-          </div>
-          <div className="space-y-2">
-            {filterOptions.size.map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.size.includes(option)}
-                  onChange={() => toggleFilter("size", option)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700">{option}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Color Filter */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium text-gray-900">Color</h3>
-            <button
-              onClick={() => clearFilter("color")}
-              className="text-xs text-gray-500 hover:text-gray-700"
-            >
-              Clear
-            </button>
-          </div>
-          <div className="space-y-2">
-            {filterOptions.color.map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.color.includes(option)}
-                  onChange={() => toggleFilter("color", option)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700">{option}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Quality Name Filter */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium text-gray-900">Quality Name</h3>
-            <button
-              onClick={() => clearFilter("qualityName")}
-              className="text-xs text-gray-500 hover:text-gray-700"
-            >
-              Clear
-            </button>
-          </div>
-          <div className="space-y-2">
-            {filterOptions.qualityName.map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.qualityName.includes(option)}
-                  onChange={() => toggleFilter("qualityName", option)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-sm text-gray-700">{option}</span>
-              </label>
-            ))}
-          </div>
+          {Object.keys(filterOptions).map((category) => (
+            <div key={category} className="mb-6">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-medium text-gray-900">{category}</h3>
+                <button
+                  onClick={() =>
+                    clearFilter(category as keyof typeof selectedFilters)
+                  }
+                  className="text-xs text-gray-500 hover:text-gray-700"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="space-y-2">
+                {filterOptions[category as keyof typeof filterOptions].map(
+                  (option) => (
+                    <label key={option} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedFilters[
+                          category as keyof typeof selectedFilters
+                        ].includes(option)}
+                        onChange={() =>
+                          toggleFilter(
+                            category as keyof typeof selectedFilters,
+                            option
+                          )
+                        }
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">{option}</span>
+                    </label>
+                  )
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
