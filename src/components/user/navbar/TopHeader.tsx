@@ -3,7 +3,7 @@ import { Facebook, Linkedin } from "lucide-react";
 
 export default function TopHeader() {
   return (
-    <div className="w-full fixed top-0 left-0 right-0 z-[110] bg-black text-white text-xs sm:text-sm py-2">
+    <div className="w-full fixed top-0 left-0 right-0 z-50 bg-black text-white text-xs sm:text-sm py-2">
       <div className="max-w-[1400px] mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
         {/* Left: Contact Information (hidden on small screens) */}
         <div className="hidden sm:flex flex-wrap justify-center sm:justify-start items-center gap-3 text-gray-300 text-[12px] sm:text-[13px]">

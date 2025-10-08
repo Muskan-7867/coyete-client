@@ -34,7 +34,7 @@ export default function Navbar() {
       <TopHeader />
 
       {/* Navbar */}
-      <div className="w-full fixed top-[38px] sm:top-[42px] left-0 right-0 z-[100] bg-white border-b border-gray-200 shadow-sm">
+      <div className="w-full fixed top-[38px] sm:top-[42px] left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-full mx-auto flex items-center justify-between px-4 py-3 md:py-4">
           {/* Left - Logo */}
           <Link href="/" className="flex items-center">
