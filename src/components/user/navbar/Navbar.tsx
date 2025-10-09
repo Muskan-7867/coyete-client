@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, User, Menu, X } from "lucide-react";
+import {  User, Menu, X } from "lucide-react";
 import TopHeader from "./TopHeader";
 import CartCount from "./components/CartCount";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ export default function Navbar() {
     "MATCH WEAR",
     "CLOTHING",
     "COACHING",
-    "MORE",
+    "MORE"
   ];
 
   const handleCategory = () => {
@@ -64,11 +64,8 @@ export default function Navbar() {
           {/* Right - Icons + Menu */}
           <div className="flex items-center gap-4">
             <CartCount />
-            <Search
-              className="w-5 h-5 text-gray-800 cursor-pointer"
-              onClick={handleCategory}
-            />
-            <User className="w-5 h-5 text-gray-800 cursor-pointer" />
+
+            <User className="w-6 h-6 text-gray-800 cursor-pointer" onClick={() => router.push("/auth/register")} />
 
             {/* Mobile Menu Toggle */}
             <button

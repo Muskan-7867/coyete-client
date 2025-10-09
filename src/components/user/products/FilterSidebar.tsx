@@ -2,7 +2,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 
-function FilterSidebar() {
+interface FilterSidebarProps {
+  isMobileFilterOpen: boolean;
+  setIsMobileFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function FilterSidebar({ isMobileFilterOpen, setIsMobileFilterOpen }: FilterSidebarProps) {
   const [selectedFilters, setSelectedFilters] = useState({
     productType: [] as string[],
     size: [] as string[],
@@ -10,12 +15,10 @@ function FilterSidebar() {
     qualityName: [] as string[],
   });
 
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-
   const filterOptions = {
     productType: ["Option 1", "Option 2", "Option 3"],
     size: ["S", "M", "L", "XL"],
-    color: ["Red", "Blue", "Green", "Black"],
+    color: ["Red", "orange", "Green", "Black"],
     qualityName: ["Premium", "Standard", "Economy"],
   };
 
@@ -46,30 +49,16 @@ function FilterSidebar() {
     }
   };
 
-  const MobileFilterButton = () => (
-    <div className="lg:hidden mb-4">
-      <button
-        onClick={() => setIsMobileFilterOpen(true)}
-        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium"
-      >
-        Show Filters
-      </button>
-    </div>
-  );
-
   return (
     <>
-      {/* Mobile Filter Button */}
-      <MobileFilterButton />
 
-      {/* Mobile Filter Overlay with AnimatePresence */}
       <AnimatePresence>
         {isMobileFilterOpen && (
           <>
             {/* Backdrop */}
             <motion.div
               key="backdrop"
-              className="fixed inset-0  bg-opacity-50 z-40"
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
@@ -86,9 +75,9 @@ function FilterSidebar() {
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
             >
-              <div className="p-6 flex flex-col h-full">
+              <div className="px-6 pt-2 flex flex-col h-full">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-6 pb-4 border-b">
+                <div className="flex justify-between items-center mb-2  border-b">
                   <h2 className="text-lg font-semibold">Filters</h2>
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
@@ -103,7 +92,7 @@ function FilterSidebar() {
                   <h2 className="text-lg font-semibold">Filter by</h2>
                   <button
                     onClick={() => clearFilter()}
-                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-sm text-orange-600 hover:text-orange-800 font-medium"
                   >
                     Clear All
                   </button>
@@ -138,11 +127,9 @@ function FilterSidebar() {
                                   option
                                 )
                               }
-                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                             />
-                            <span className="ml-2 text-sm text-gray-700">
-                              {option}
-                            </span>
+                            <span className="ml-2 text-sm text-gray-700">{option}</span>
                           </label>
                         )
                       )}
@@ -154,7 +141,7 @@ function FilterSidebar() {
                 <div className="mt-auto">
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    className="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-700 transition-colors"
                   >
                     Apply Filters
                   </button>
@@ -172,7 +159,7 @@ function FilterSidebar() {
             <h2 className="text-lg font-semibold text-gray-900">Filter by</h2>
             <button
               onClick={() => clearFilter()}
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              className="text-sm text-orange-600 hover:text-orange-800 font-medium"
             >
               Clear All
             </button>
@@ -206,7 +193,7 @@ function FilterSidebar() {
                             option
                           )
                         }
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
                       <span className="ml-2 text-sm text-gray-700">{option}</span>
                     </label>

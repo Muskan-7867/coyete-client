@@ -10,7 +10,7 @@ export default function WhatWeSell() {
       id: 1,
       title: 'Bats',
       description: 'Expertly handcrafted for perfect balance ',
-      image: '/assets/bat.jpg',
+      image: '/assets/bat1.jfif',
       category: 'bats',
       bgColor: 'bg-gray-100'
     },
@@ -24,9 +24,9 @@ export default function WhatWeSell() {
     },
     {
       id: 3,
-      title: 'Pads',
+      title: 'Gloves',
       description: 'Arm focused construction. New comfort layer padding technology.',
-      image: "/assets/pads.jpg",
+      image: "/assets/gloves.jpg",
       category: 'protective-gear',
       bgColor: 'bg-green-50'
     },
@@ -79,12 +79,13 @@ export default function WhatWeSell() {
               </div>
 
               {/* Product Image */}
-              <div className="relative h-48 mb-6 rounded-xl overflow-hidden bg-white/50">
+              <div className="relative h-48 mb-6 rounded-xl overflow-hidden bg-white/50 flex justify-center items-center">
                 <Image
                   src={product.image}
                   alt={product.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  width={150}
+                  height={150}
+                  className="object-cover group-hover:scale-110 transition-transform duration-500 p-4" 
                 />
                 
                 {/* Hover overlay */}

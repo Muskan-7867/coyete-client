@@ -40,7 +40,7 @@ export default function TopHeader() {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-blue-500 transition-colors"
+              className="hover:text-orange-500 transition-colors"
             >
               <Facebook size={18} />
             </Link>
@@ -48,7 +48,7 @@ export default function TopHeader() {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-orange-400 transition-colors"
             >
               <Linkedin size={18} />
             </Link>
