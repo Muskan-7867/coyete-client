@@ -88,7 +88,7 @@ const AdminDashboard = ({ children }: AdminLayoutProps) => {
         {/* Logout */}
         <div className="absolute bottom-6 left-3 right-3">
           <Link
-            href="/auth/login"
+            href="/login"
             className="flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
           >
             <LogOut className="mr-3" size={18} />

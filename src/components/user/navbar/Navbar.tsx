@@ -65,7 +65,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <CartCount />
 
-            <User className="w-6 h-6 text-gray-800 cursor-pointer" onClick={() => router.push("/auth/register")} />
+            <User className="w-6 h-6 text-gray-800 cursor-pointer" onClick={() => router.push("/register")} />
 
             {/* Mobile Menu Toggle */}
             <button
