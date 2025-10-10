@@ -17,6 +17,35 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  setSuccess(null);
+
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message);
+
+    setSuccess("Login successful!");
+    localStorage.setItem("token", data.token);
+    window.location.href = "/";
+  } catch  {
+    console.log("error")
+  } finally {
+    setLoading(false);
+  }
+}
+
+
+
   return (
     <main className="relative z-10 max-w-5xl w-full mx-4 p-6 md:p-8 lg:p-12">
       <div className="bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-gray-300/20">
@@ -47,7 +76,7 @@ export default function Login() {
 
           <footer className="relative z-10 mt-4 text-sm text-white">
             Don&apos;t have an account?{" "}
-            <a href="/auth/register" className="underline font-medium">
+            <a href="/register" className="underline font-medium">
               Register
             </a>
           </footer>
@@ -58,7 +87,7 @@ export default function Login() {
           <h2 className="text-2xl font-bold">Login</h2>
           <p className="mt-2 text-sm">Enter your details to sign in.</p>
 
-          <form className="mt-6 space-y-4 text-white">
+          <form className="mt-6 space-y-4 text-white" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium">Email</label>
               <input

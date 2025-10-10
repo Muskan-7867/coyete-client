@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -14,10 +15,42 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  setSuccess(null);
+
+  try {
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(data.message || `HTTP error! status: ${res.status}`);
+    }
+
+    setSuccess("Registration successful!");
+    router.push("/login")
+    setSubmitted(true);
+    setForm({ name: "", email: "", password: "", phone: "" });
+  } catch  {
+    setError( "Something went wrong during registration");
+    console.error("Registration error:");
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <main className="relative z-10 max-w-5xl w-full mx-4 p-6 md:p-8 lg:p-12">
@@ -49,7 +82,7 @@ export default function RegisterPage() {
 
           <footer className="relative z-10 mt-4 text-sm text-white">
             Already have an account?{" "}
-            <a href="/auth/login" className="underline font-medium">
+            <a href="/login" className="underline font-medium">
               Sign in
             </a>
           </footer>
@@ -60,7 +93,7 @@ export default function RegisterPage() {
           <h2 className="text-2xl font-bold">Register</h2>
           <p className="mt-2 text-sm">Fill in your details to start playing.</p>
 
-          <form className="mt-6 space-y-4 text-white">
+          <form className="mt-6 space-y-4 text-white" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium">Name</label>
               <input
