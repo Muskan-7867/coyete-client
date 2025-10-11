@@ -1,24 +1,77 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose from 'mongoose';
 
-const ProductSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    shortDescription: { type: String, required: true },
-    detailedDescription: { type: String, required: true },
-    price: { type: Number, required: true },
-    originalPrice: { type: Number, required: true },
-    discount: { type: Number, default: 0 },
-    tax: { type: Number, default: 0 },
-    quality: { type: String, required: true },
-    category: { type: String, required: true },
-    subcategory: { type: String, required: true },
-    size: { type: String, required: true },
-    colors: { type: String, required: true },
-    inStock: { type: Boolean, default: true },
-    images: [{ type: String }], // store image URLs (Cloudinary or local)
+const ProductSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
+    required: [true, 'Product name is required'] 
   },
-  { timestamps: true }
-);
+  shortDescription: { 
+    type: String, 
+    required: [true, 'Short description is required'] 
+  },
+  detailedDescription: { 
+    type: String, 
+    required: [true, 'Detailed description is required'] 
+  },
+  price: { 
+    type: Number, 
+    required: [true, 'Price is required'],
+    min: [0, 'Price cannot be negative']
+  },
+  originalPrice: { 
+    type: Number, 
+    required: [true, 'Original price is required'],
+    min: [0, 'Original price cannot be negative']
+  },
+  discount: { 
+    type: Number, 
+    default: 0,
+    min: [0, 'Discount cannot be negative'],
+    max: [100, 'Discount cannot exceed 100%']
+  },
+  tax: { 
+    type: Number, 
+    default: 0,
+    min: [0, 'Tax cannot be negative']
+  },
+  quality: { 
+    type: String, 
+    required: [true, 'Quality is required'] 
+  },
+  category: { 
+    type: String, 
+    required: [true, 'Category is required'] 
+  },
+  subcategory: { 
+    type: String, 
+    required: [true, 'Subcategory is required'] 
+  },
+  size: { 
+    type: String, 
+    required: [true, 'Size is required'] 
+  },
+  colors: { 
+    type: String, 
+    required: [true, 'Color is required'] 
+  },
+  inStock: { 
+    type: Boolean, 
+    default: true 
+  },
+  images: [
+    {
+      publicId: {
+        type: String,
+        required: true
+      },
+      url: {
+        type: String,
+        required: true
+      }
+    }
+  ]
+}, {
+  timestamps: true
+});
 
-const Product = models.Product || mongoose.model("Product", ProductSchema);
-export default Product;
+export default mongoose.models.Product || mongoose.model('Product', ProductSchema);
