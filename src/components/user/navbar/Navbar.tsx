@@ -1,36 +1,21 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {  User, Menu, X } from "lucide-react";
+import { MenuIcon, User, X } from "lucide-react";
 import TopHeader from "./TopHeader";
 import CartCount from "./components/CartCount";
 import { useRouter } from "next/navigation";
+import { useCategories } from "@/lib/queries/query";
+import { CategoryMenu } from "./components/Menu";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
-
-  const categories = [
-    "BATS",
-    "BALLS",
-    "GLOVES",
-    "PADS",
-    "BAGS",
-    "MATCH WEAR",
-    "CLOTHING",
-    "COACHING",
-    "MORE"
-  ];
-
-  const handleCategory = () => {
-    router.push("/category");
-  };
+  const { data: menus } = useCategories();
 
   return (
     <>
-      {/* Top Header */}
       <TopHeader />
 
       {/* Navbar */}
@@ -48,51 +33,34 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Center - Categories (Desktop Only) */}
+          {/* Center - Desktop Menu */}
           <div className="hidden md:flex items-center gap-6 text-[13px] font-medium tracking-wide text-gray-800">
-            {categories.map((item) => (
-              <button
-                key={item}
-                onClick={handleCategory}
-                className="hover:text-black transition-colors"
-              >
-                {item}
-              </button>
-            ))}
+            <CategoryMenu menus={menus} />
           </div>
 
-          {/* Right - Icons + Menu */}
+          {/* Right - Icons + Mobile Toggle */}
           <div className="flex items-center gap-4">
             <CartCount />
 
-            <User className="w-6 h-6 text-gray-800 cursor-pointer" onClick={() => router.push("/register")} />
+            <User
+              className="w-6 h-6 text-gray-800 cursor-pointer"
+              onClick={() => router.push("/register")}
+            />
 
-            {/* Mobile Menu Toggle */}
             <button
               className="md:hidden text-gray-800"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle Menu"
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              {menuOpen ? <X size={24} /> : <MenuIcon size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200 shadow-md flex flex-col gap-3 py-4 px-6 text-sm font-medium text-gray-800 animate-slideDown">
-            {categories.map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  setMenuOpen(false);
-                  handleCategory();
-                }}
-                className="hover:text-black transition-colors text-left"
-              >
-                {item}
-              </button>
-            ))}
+            <CategoryMenu menus={menus} isMobile={true} />
           </div>
         )}
       </div>
