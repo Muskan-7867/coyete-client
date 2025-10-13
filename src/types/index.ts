@@ -4,6 +4,7 @@ export type SubCategoryT = {
   parentCategory: string;
   parentSubCategory?: string | null;
   subcategories?: SubCategoryT[];
+  rank: number
 };
 
 export type CategoryT = {
@@ -11,4 +12,5 @@ export type CategoryT = {
   name: string;
   description?: string | null;
   subcategories: SubCategoryT[];
+  rank: number
 };
