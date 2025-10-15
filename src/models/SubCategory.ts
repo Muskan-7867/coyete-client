@@ -1,20 +1,26 @@
+
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ISubCategory extends Document {
   name: string;
-  parentCategory: mongoose.Types.ObjectId;
-  parentSubCategory?: mongoose.Types.ObjectId | null;
-  subcategories?: mongoose.Types.ObjectId[];
+  rank: number; // Add rank field
+  parentCategory: string;
+  parentSubCategory?: string;
+  subcategories: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-const SubCategorySchema = new Schema<ISubCategory>(
+const SubCategorySchema: Schema = new Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
+    },
+    rank: {
+      type: Number,
+      default: 0, // Default rank is 0
     },
     parentCategory: {
       type: Schema.Types.ObjectId,
@@ -24,7 +30,6 @@ const SubCategorySchema = new Schema<ISubCategory>(
     parentSubCategory: {
       type: Schema.Types.ObjectId,
       ref: "SubCategory",
-      default: null,
     },
     subcategories: [
       {
@@ -33,13 +38,9 @@ const SubCategorySchema = new Schema<ISubCategory>(
       },
     ],
   },
-  { timestamps: true }
-);
-
-// Optional: unique name per parent context
-SubCategorySchema.index(
-  { name: 1, parentCategory: 1, parentSubCategory: 1 },
-  { unique: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.models.SubCategory ||

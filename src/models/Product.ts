@@ -38,13 +38,14 @@ const ProductSchema = new mongoose.Schema({
     type: String, 
     required: [true, 'Quality is required'] 
   },
-  category: { 
-    type: String, 
-    required: [true, 'Category is required'] 
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
   },
-  subcategory: { 
-    type: String, 
-    required: [true, 'Subcategory is required'] 
+  subcategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "SubCategory"
   },
   size: { 
     type: String, 
@@ -60,18 +61,16 @@ const ProductSchema = new mongoose.Schema({
   },
   images: [
     {
-      publicId: {
-        type: String,
-        required: true
-      },
-      url: {
-        type: String,
-        required: true
-      }
+      publicId: { type: String, required: true },
+      url: { type: String, required: true },
+      rank: { type: Number, default: 0, min: 0 }
     }
   ]
 }, {
   timestamps: true
 });
 
-export default mongoose.models.Product || mongoose.model('Product', ProductSchema);
+// ✅ Fix for model overwrite in Next.js
+const Product = mongoose.models?.Product || mongoose.model('Product', ProductSchema);
+
+export default Product;
