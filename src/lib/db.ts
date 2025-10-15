@@ -1,9 +1,9 @@
-// lib/db.ts
+
 import mongoose from "mongoose";
 
 const connectDB = async () => {
     try {
-        if (mongoose.connection.readyState >= 1) {
+        if (mongoose.connection?.readyState >= 1) {
             return;
         }
         
