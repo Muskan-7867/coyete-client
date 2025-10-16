@@ -165,12 +165,22 @@ export async function deleteCategory(id: string) {
 export async function getCategoryById(id: string) {
   try {
     await connectDB();
-    const category = await Category.findById(id);
-    if (!category) return { success: false, message: "Category not found" };
-    return { success: true, category };
+
+    const category = await Category.findById(id).lean(); // ✅ use lean()
+
+    if (!category) {
+      return { success: false, message: "Category not found" };
+    }
+
+    // ✅ ensure safe serialization
+    const plainCategory = JSON.parse(JSON.stringify(category));
+
+    return { success: true, category: plainCategory };
   } catch (error) {
     console.error("Error fetching category:", error);
-    return { success: false, message: "Server error" };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Server error"
+    };
   }
 }
-

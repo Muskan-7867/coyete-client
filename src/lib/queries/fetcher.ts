@@ -1,15 +1,29 @@
 
-import { CategoryT } from "@/types";
-import axios from "axios";
 
-export const fetchCategories = async (): Promise<CategoryT[]> => {
-    try {
-      const res = await axios.get(`/api/categories`);
-      console.log("from fetcher", res.data.categories);
-      return res.data.categories;
-      
-    } catch (error) {
-      console.log(error);
-      return [];
+
+
+
+
+
+
+export const getCategoryProducts = async (id: string) => {
+  try {
+    const response = await fetch(`/api/categories/${id}/products`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch category products');
     }
-  };
+
+    const data = await response.json();
+    console.log("from fetcher products", data)
+    return data;
+  } catch (error) {
+    console.error('Error fetching category products:', error);
+    throw error;
+  }
+};

@@ -94,7 +94,7 @@ export async function getColorById(id: string) {
     await connectDB();
     const color = await Color.findById(id);
     if (!color) return { success: false, message: "Color not found" };
-    return { success: true, color };
+    return { success: true, color: JSON.parse(JSON.stringify(color)) };
   } catch (error) {
     console.error("Error fetching color:", error);
     return { success: false, message: "Server error" };
@@ -105,7 +105,7 @@ export async function getColorsByIds(ids: string[]) {
   try {
     await connectDB();
     const colors = await Color.find({ _id: { $in: ids } });
-    return { success: true, colors };
+       return { success: true, colors: JSON.parse(JSON.stringify(colors)) };
   } catch (error) {
     console.error("Error fetching colors:", error);
     return { success: false, message: "Server error", colors: [] };

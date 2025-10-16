@@ -138,11 +138,12 @@ export async function updateSubcategory(
     }
 
     revalidatePath("/admin/subcategories");
+       const plainSubcategory = JSON.parse(JSON.stringify(subcategory));
 
     return {
       success: true,
       message: "Subcategory updated successfully",
-      subcategory
+      subcategory: plainSubcategory
     };
   } catch  {
     console.error("Error updating subcategory:");
@@ -180,9 +181,17 @@ export async function deleteSubcategory(id: string) {
 export async function getSubcategoryById(id: string) {
   try {
     await connectDB();
-    const subcategory = await SubCategory.findById(id);
-    if (!subcategory) return { success: false, message: "Subcategory not found" };
-    return { success: true, subcategory };
+    const subcategory = await SubCategory.findById(id)
+      .populate("parentCategory")
+      .populate("parentSubCategory");
+
+    if (!subcategory)
+      return { success: false, message: "Subcategory not found" };
+
+    // ✅ convert to plain object
+    const plainSubcategory = JSON.parse(JSON.stringify(subcategory));
+
+    return { success: true, subcategory: plainSubcategory };
   } catch (error) {
     console.error("Error fetching subcategory:", error);
     return { success: false, message: "Server error" };

@@ -96,7 +96,7 @@ export async function getQualityById(id: string) {
     await connectDB();
     const quality = await Quality.findById(id);
     if (!quality) return { success: false, message: "Quality not found" };
-    return { success: true, quality };
+    return { success: true, quality: JSON.parse(JSON.stringify(quality)) };
   } catch (error) {
     console.error("Error fetching quality:", error);
     return { success: false, message: "Server error" };
