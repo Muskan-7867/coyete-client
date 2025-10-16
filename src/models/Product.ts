@@ -5,6 +5,7 @@ const ProductSchema = new mongoose.Schema({
     type: String, 
     required: [true, 'Product name is required'] 
   },
+  slug: { type: String, required: true, unique: true },
   shortDescription: { 
     type: String, 
     required: [true, 'Short description is required'] 
@@ -65,7 +66,8 @@ const ProductSchema = new mongoose.Schema({
       url: { type: String, required: true },
       rank: { type: Number, default: 0, min: 0 }
     }
-  ]
+  ],
+  
 }, {
   timestamps: true
 });
